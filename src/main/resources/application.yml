@@ -1,0 +1,18 @@
+server:
+  port: 8089
+
+
+spring:
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+      bindings:
+        mks-demo-in-0:
+          destination: mks.demo.in
+          group: mks.demo.in.grp
+        mks-demo-out-0:
+          destination: mks.demo.out
+    function:
+      definition: mks-demo

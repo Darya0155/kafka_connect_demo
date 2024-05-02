@@ -1,0 +1,60 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: dev
+  labels:
+    env: dev1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-ui-deployment
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-ui
+  revisionHistoryLimit: 5
+  progressDeadlineSeconds: 300
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: kafka-ui
+    spec:
+      containers:
+        - name: kafka-ui-pod
+          image: provectuslabs/kafka-ui:latest
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: 0.2
+          imagePullPolicy: Always
+          env:
+            - name: DYNAMIC_CONFIG_ENABLED
+              value: 'true'
+            - name: KAFKA_CLUSTERS_0_NAME
+              value: eks-demo
+            - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+              value: b-2.awsmskdemo.qsog6c.c4.kafka.ap-south-1.amazonaws.com:9098,b-1.awsmskdemo.qsog6c.c4.kafka.ap-south-1.amazonaws.com:9098
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-ui-svc
+  namespace: dev
+spec:
+  selector:
+    app: kafka-ui
+  type: NodePort
+  ports:
+    - port: 8080
+      nodePort: 30005
