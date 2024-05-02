@@ -56,31 +56,6 @@ curl --location 'localhost:8083/connectors/' \
 ```
 
 
-```bash
-kubectl apply -f deployment.kafka-ui.eks.yml
-```
-
-```bash
-kubectl apply -f deployment.db.eks.yml
-```
-
-```bash
-kubectl delete -f deployment.db.eks.yml
-```
-
-```bash
-kubectl get pods --namespace=dev
-```
-
-```bash
-kubectl get svc --namespace=dev
-```
-
-```bash
-kubectl logs -f  {podName} --namespace=dev
-
-kubectl logs -f  kafka-ui-deployment-86f6dc4775-gs2hs --namespace=dev
-```
 
 
 
